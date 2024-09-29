@@ -19,7 +19,6 @@ export class MessageHandler {
                 await this.handleClearHistory();
                 break;
             default:
-                console.warn(`Unknown message type: ${message.type}`);
         }
     }
 

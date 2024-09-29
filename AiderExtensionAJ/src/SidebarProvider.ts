@@ -9,7 +9,6 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
         private readonly _extensionUri: vscode.Uri,
         private readonly _aiderIntegration: AiderIntegration
     ) {
-        console.log('SidebarProvider constructed');
     }
 
     public resolveWebviewView(
@@ -17,7 +16,6 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
         _context: vscode.WebviewViewResolveContext,
         _token: vscode.CancellationToken,
     ) {
-        console.log('Resolving webview view...');
         this._view = webviewView;
 
         webviewView.webview.options = {
@@ -26,11 +24,9 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
         };
 
         const html = this._getHtmlForWebview(webviewView.webview);
-        console.log('Generated HTML:', html);
         webviewView.webview.html = html;
 
         webviewView.webview.onDidReceiveMessage(async (data) => {
-            console.log('Received message in SidebarProvider:', data);
             switch (data.type) {
                 case "runAider": {
                     const result = await this._aiderIntegration.runAiderCommand(data.prompt, data.mode);
@@ -54,7 +50,6 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
             }
         });
 
-        console.log('SidebarProvider: Webview resolved');
     }
 
     private _getHtmlForWebview(webview: vscode.Webview) {
