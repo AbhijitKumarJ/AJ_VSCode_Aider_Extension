@@ -9,9 +9,13 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSend }) => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (input.trim()) {
-            onSend(input.trim());
+        const trimmedInput = input.trim();
+        if (trimmedInput) {
+            onSend(trimmedInput);
             setInput('');
+        } else {
+            // Optionally, show a warning or handle empty input
+            console.warn('Input is empty or contains only whitespace');
         }
     };
 

@@ -25,8 +25,17 @@ export async function handleFileChanges(aiderOutput: string): Promise<void> {
             ), change.newText);
         });
 
+        // Consider showing a diff of the changes before prompting the user
+        const diff = changes.map(change => {
+            const originalText = document.getText(new vscode.Range(
+                document.positionAt(change.start),
+                document.positionAt(change.end)
+            ));
+            return `Original:\n${originalText}\nNew:\n${change.newText}`;
+        }).join('\n');
+
         const applyChanges = await vscode.window.showQuickPick(['Yes', 'No'], {
-            placeHolder: `Apply changes to ${path.basename(filePath)}?`
+            placeHolder: `Review changes to ${path.basename(filePath)}:\n${diff}\nApply changes?`
         });
 
         if (applyChanges === 'Yes') {
@@ -39,6 +48,7 @@ export async function handleFileChanges(aiderOutput: string): Promise<void> {
 function parseFileChanges(output: string): Record<string, FileChange['changes']> {
     const fileChanges: Record<string, FileChange['changes']> = {};
 
+    // Consider using a more robust parsing method or library if the output format is complex
     const fileChangeRegex = /--- (.+)\n\+\+\+ \1\n@@ -(\d+),(\d+) \+(\d+),(\d+) @@\n([\s\S]+?)(?=\n--- |\n$)/g;
     let match;
 
