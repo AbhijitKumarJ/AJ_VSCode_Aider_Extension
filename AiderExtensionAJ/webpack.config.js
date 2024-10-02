@@ -1,45 +1,36 @@
-const path = require('path');                                                                                                  
-                                                                                                                                
- module.exports = {                                                                                                             
-   target: 'web', // Ensure the target is set to 'web'                                                                          
-   entry: {                                                                                                                     
-     extension: './src/extension.ts',                                                                                           
-     webview: './src/webview/index.tsx'                                                                                         
-   },                                                                                                                           
-   output: {                                                                                                                    
-     path: path.resolve(__dirname, 'out'),                                                                                      
-     filename: '[name].js',                                                                                                     
-     libraryTarget: 'umd', // Use UMD to support both CommonJS and browser environments                                         
-     globalObject: 'this' // Ensure the global object is correctly set                                                          
-   },                                                                                                                           
-   mode: 'development',                                                                                                         
-   devtool: 'source-map',                                                                                                       
-   externals: {                                                                                                                 
-     vscode: 'commonjs vscode'                                                                                                  
-   },                                                                                                                           
-   resolve: {                                                                                                                   
-     extensions: ['.ts', '.tsx', '.js', '.jsx']                                                                                 
-   },                                                                                                                           
-   module: {                                                                                                                    
-     rules: [                                                                                                                   
-       {                                                                                                                        
-         test: /\.tsx?$/,                                                                                                       
-         exclude: /node_modules/,                                                                                               
-         use: [                                                                                                                 
-           {                                                                                                                    
-             loader: 'ts-loader'                                                                                                
-           }                                                                                                                    
-         ]                                                                                                                      
-       },                                                                                                                       
-       {                                                                                                                        
-         test: /\.css$/,                                                                                                        
-         use: ['style-loader',  {                                                                                               
-           loader: 'css-loader',                                                                                                
-           options: {                                                                                                           
-             modules: true                                                                                                      
-           }                                                                                                                    
-         }]                                                                                                                     
-       }                                                                                                                        
-     ]                                                                                                                          
-   }                                                                                                                            
- };           
+const path = require("path");
+
+const extensionConfig = {
+  target: "node",
+  entry: "./src/extension.ts",
+  output: {
+    path: path.resolve(__dirname, "out"),
+    filename: "extension.js",
+    libraryTarget: "commonjs2",
+  },
+  externals: {
+    vscode: "commonjs vscode",
+  },
+  resolve: {
+    extensions: [".ts", ".js"],
+  },
+  module: {
+    rules: [
+      {
+        test: /\.ts$/,
+        exclude: /node_modules/,
+        use: [
+          {
+            loader: "ts-loader",
+            options: {
+              configFile: path.resolve(__dirname, "src", "tsconfig.json"),
+            },
+          },
+        ],
+      },
+    ],
+  },
+  devtool: "nosources-source-map",
+};
+
+module.exports = [extensionConfig];
